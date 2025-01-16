@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "607499588215",
+    "project_id": "bro-sim",
+    "storage_bucket": "bro-sim.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:607499588215:android:1bb9588ac5e5665778ec72",
+        "android_client_info": {
+          "package_name": "com.simfree"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "607499588215-p9vkg8fhnd14nr50d85bosgu11vle1bc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.simfree",
+            "certificate_hash": "22f34690fa42cabc9a0bce6fcac9720c7038a08d"
+          }
+        },
+        {
+          "client_id": "607499588215-js6sqpbjtt6qmd6bm7big2df5t547djl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDTkt9temi5orGjW4MGUhMmvoux-9tbFD4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "607499588215-js6sqpbjtt6qmd6bm7big2df5t547djl.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "607499588215-2tu7tfh62q1adoj8h4v1da3um8im1a0f.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.simfree"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
