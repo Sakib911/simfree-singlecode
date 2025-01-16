@@ -6,17 +6,14 @@ import SignUpEmail from "./signup/SignUpEmail";
 import SignInEmail from "./signin/SignInEmail";
 import SignUpPassword from "./signup/SignUpPassword";
 import SignInPassword from "./signin/SignInPassword";
+import SignUpWithCode from "./code/SignUpWithCode";
+import SignInWithCode from "./code/SignInWithCode";
 
 const OnboardingStack = createStackNavigator();
 
 const OnboardingNavigator = () => {
   return (
     <OnboardingStack.Navigator>
-      {/* <OnboardingStack.Screen
-        name="SplashScreen"
-        component={SplashScreen}
-        options={{ headerShown: false }}
-      /> */}
       <OnboardingStack.Screen
         name="Welcome"
         component={WelcomeScreen}
@@ -40,6 +37,16 @@ const OnboardingNavigator = () => {
       <OnboardingStack.Screen
         name="SignUpPassword"
         component={SignUpPassword}
+        options={{ headerShown: false }}
+      />
+      <OnboardingStack.Screen
+        name="SignUpWithCode"
+        component={SignUpWithCode}
+        options={{ headerShown: false }}
+      />
+      <OnboardingStack.Screen
+        name="SignInWithCode"
+        component={SignInWithCode}
         options={{ headerShown: false }}
       />
     </OnboardingStack.Navigator>

@@ -80,7 +80,7 @@ buck-out/
 
 /.expo
 
-# /.env
+/.env
 # /google-services.json
 # /android
 # /ios

@@ -2,6 +2,7 @@ import {
   faChevronRight,
   faClose,
   faRightFromBracket,
+  faCopy,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import React, { useState } from "react";
@@ -12,7 +13,9 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Clipboard,
 } from "react-native";
+import Toast from "react-native-toast-message";
 import { auth } from "../../../firebaseConfig";
 import { useAuthStore } from "../../store";
 import {
@@ -100,12 +103,30 @@ const ProfileScreen = ({ navigation }) => {
     },
   ];
 
+  const handleCopyCode = () => {
+    if (user?.authCode) {
+      Clipboard.setString(user.authCode);
+      Toast.show({
+        type: 'success',
+        text1: 'Code copied to clipboard'
+      });
+    }
+  };
+
   return (
     <>
       <ConfirmationModal
         title={"Logout"}
-        message={"Are you sure you want to signout?"}
-        onConfirm={() => auth.signOut()}
+        message={"Are you sure you want to sign out?"}
+        onConfirm={() => {
+          if (user?.isAnonymous) {
+            // For code-based authentication, just update the user state to null
+            updateUser(null);
+          } else {
+            // For regular authentication, sign out from Firebase
+            auth.signOut();
+          }
+        }}
         onCancel={() => setIsModal(false)}
         visible={isModal}
       />
@@ -115,18 +136,15 @@ const ProfileScreen = ({ navigation }) => {
           showsVerticalScrollIndicator={false}
           //  stickyHeaderIndices={[0]}
         >
-          <View className="flex flex-row items-center justify-between w-full">
+            <View className="flex flex-row items-center justify-between w-full">
             <CustomText classes="font-bold text-3xl text-text-1">
               Profile
             </CustomText>
-            <TouchableOpacity
-              onPress={() => {
-                setProfileModal(true);
-                // navigation.push("EditProfile")
-              }}
-            >
-              <ShowImage imageName={"editIcon"} classes="w-6 h-6" />
-            </TouchableOpacity>
+            {!user?.isAnonymous && (
+              <TouchableOpacity onPress={() => setProfileModal(true)}>
+                <ShowImage imageName={"editIcon"} classes="w-6 h-6" />
+              </TouchableOpacity>
+            )}
           </View>
           <View className="flex flex-row space-x-4 mb-4 items-center p-2 w-full bg-white rounded-3xl">
             <ShowImage
@@ -138,23 +156,36 @@ const ProfileScreen = ({ navigation }) => {
                 classes={"font-bold text-lg text-text-4 w-[80%]"}
                 numberOfLines={1}
               >
-                {userName ? userName : ""}
+                {userName ? userName : "Anonymous User"}
               </CustomText>
               <View className="flex flex-row items-center space-x-2">
-                <CustomText
-                  classes={"font-medium text-sm text-text-5 w-[80%]"}
-                  numberOfLines={1}
-                >
-                  {user?.email}
-                </CustomText>
-                {/* <TouchableOpacity
-                  onPress={() => alert("Verify Email")}
-                  className="bg-bg-3 px-2 py-1 rounded-full"
-                >
-                  <CustomText classes={"font-medium text-xs text-white"}>
-                    Verify
+                {user?.isAnonymous ? (
+                 <View className="flex flex-row items-center">
+                 <CustomText
+                   classes={"font-medium text-sm text-text-5"}
+                   numberOfLines={1}
+                 >
+                   Code: {user?.authCode}
+                 </CustomText>
+                 <TouchableOpacity 
+                   onPress={handleCopyCode}
+                   className="ml-2 p-2"
+                 >
+                   <FontAwesomeIcon 
+                     icon={faCopy} 
+                     size={16} 
+                     color="#009AFF"
+                   />
+                 </TouchableOpacity>
+               </View>
+                ) : (
+                  <CustomText
+                    classes={"font-medium text-sm text-text-5 w-[80%]"}
+                    numberOfLines={1}
+                  >
+                    {user?.email}
                   </CustomText>
-                </TouchableOpacity> */}
+                )}
               </View>
             </View>
           </View>

@@ -14,7 +14,8 @@ import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { LoginManager, AccessToken } from "react-native-fbsdk-next";
 import * as AppleAuthentication from "expo-apple-authentication";
 import { OAuthProvider } from "firebase/auth/react-native";
-
+import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { db } from "../../firebaseConfig";
 export const createUserWithEmailPass = async (email, password, data, cb) => {
   try {
     const authUser = await createUserWithEmailAndPassword(
@@ -338,3 +339,56 @@ export const reAuthenticateAppleLoginUser = async () => {
   });
   return reAuthResponse;
 };
+
+export const generateSignupCode = async () => {
+  const code = Math.random().toString(36).substring(2, 10).toUpperCase();
+
+  try {
+    const codeRef = doc(db, 'authCodes', code);
+    const codeDoc = await getDoc(codeRef);
+
+    if (codeDoc.exists()) {
+      // If code already exists, try again
+      return generateSignupCode();
+    }
+
+    await setDoc(codeRef, {
+      code,
+      createdAt: new Date(),
+      lastUsed: null
+    });
+
+    return code;
+  } catch (error) {
+    console.error('Error generating signup code:', error);
+    throw error;
+  }
+};
+
+export const signInWithCode = async (code) => {
+  try {
+    const codeRef = doc(db, 'authCodes', code);
+    const codeDoc = await getDoc(codeRef);
+
+    if (!codeDoc.exists()) {
+      throw new Error('Invalid code');
+    }
+
+    // Update last used timestamp
+    await updateDoc(codeRef, {
+      lastUsed: new Date()
+    });
+
+    // Create anonymous user data
+    const anonymousData = {
+      isAnonymous: true,
+      authCode: code,
+      createdAt: new Date()
+    };
+
+    return anonymousData;
+  } catch (error) {
+    console.error('Error signing in with code:', error);
+    throw error;
+  }
+}
